@@ -16,7 +16,6 @@ st.set_page_config(
     layout="wide"
 )
 
-
 # Load and clean data
 @st.cache_data
 def load_and_clean_data():
@@ -47,6 +46,7 @@ overview_tab, data_tab, analysis_tab, conclusion_tab = st.tabs([
 
 with overview_tab:
     st.header("Overview")
+    st.image("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExc29iZmdpaGxqcmZnbXl2cDlkdHVsNTRmZDJwYTYzZ2VqaHNvbmlzbCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/12s2PXFPfJXUcHHjWR/giphy.gif", width=450)
     st.markdown("""
         This app uses the **Sleep Health and Lifestyle** dataset, which contains information about
         individuals' demographics, daily habits, and cardiovascular measurements.
@@ -73,6 +73,8 @@ with overview_tab:
 
 with data_tab:
     st.subheader("Data Exploration")
+    st.image("https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExem92MWJoM2pqaHNiaXQwNzZrczBidnk0Ym04cHZkZjBnNnQ3cDQzdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iEciXWjJK8OxYTNUJu/giphy.gif", width=450)
+
 
     missing_counts = df.isna().sum()
     st.write("Missing values per column:")
@@ -107,6 +109,9 @@ with analysis_tab:
 
     with simple_tab:
         st.subheader("Simple Linear Relationships")
+        st.image(
+            "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2dibzRjaml3eWNobWl0ZTh5MjZ5MzZlcmFzMzdvYnRqYzY1MnpwOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d3mlE7uhX8KFgEmY/giphy.gif",
+            width=450)
 
         plots = [
             ("Age", "Sleep Duration"),
@@ -241,6 +246,9 @@ with analysis_tab:
 
 with conclusion_tab:
     st.header("Conclusion, Limitations, and Next Steps")
+    st.image(
+        "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWkzcXo4ZnViazVsa2Jxbmd2MGg2NnhsdHhnZ3R6dmgxcXlyNnQ3MyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Npe0g4CpplQy86Fwt0/giphy.gif",
+        width=450)
 
     # --- 1. Answering the overview question ---
     st.subheader("What did this analysis show?")
