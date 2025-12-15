@@ -35,6 +35,7 @@ def load_and_clean_data():
 df = load_and_clean_data()
 
 st.title("Sleep Health and Lifestyle Analysis")
+st.header("by Team O(1)")
 
 # Fix 1: Correct tabs unpacking (4 tabs, 4 variables)
 overview_tab, data_tab, analysis_tab, conclusion_tab = st.tabs([
