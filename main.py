@@ -62,7 +62,7 @@ st.dataframe(df.head(), use_container_width=True)
 st.write("Summary statistics for numeric columns:")
 st.dataframe(df.describe(), use_container_width=True)
 
-data_exploration_tab,simple_tab, multi_tab = st.tabs(["Data Preparation and Exploration","Simple linear", "Multiple linear"])
+data_exploration_tab,simple_tab, multi_tab, conclusion_tab = st.tabs(["Data Preparation and Exploration","Simple linear", "Multiple linear", "Conclusion"])
 
 with data_exploration_tab:
     st.subheader("Data Exploration")
@@ -244,15 +244,6 @@ with simple_tab:
     )
     st.plotly_chart(fig6, use_container_width=True)
 
-
-    fig7 = px.scatter(
-        df,
-        x="Systolic_BP",
-        y="Age",
-     trendline="ols",
-        title="Age vs Systolic Blood Pressure"
-    )
-    st.plotly_chart(fig7, use_container_width=True)
 
 with multi_tab:
     st.subheader("Multiple linear regression: predict Sleep Duration")
@@ -438,6 +429,190 @@ with multi_tab:
             """
             - Green zone on the gauge highlights roughly 7–9 hours, often cited as a healthy adult range.
             - The histogram shows how your predicted sleep compares to others in this dataset.
+            """
+        )
+
+with conclusion_tab:
+    st.header("Conclusion, Limitations, and Next Steps")
+
+    # --- 1. Answering the overview question ---
+    st.subheader("What did this analysis show?")
+
+    st.markdown(
+        """
+        **Research question recap:**  
+        *How well can lifestyle and cardiovascular factors (age, sleep quality, activity, stress, heart rate,
+        daily steps, blood pressure) predict nightly sleep duration in this dataset?*
+
+        **Main findings:**
+
+        - A Ridge multiple linear regression model using nine predictors (**Age**, **Quality of Sleep**,
+          **Physical Activity Level**, **Stress Level**, **Heart Rate**, **Daily Steps**, **Systolic_BP**,
+          **Diastolic_BP**, **Pulse_Pressure**) can explain a substantial portion of the variation in sleep
+          duration in this dataset.
+        - Higher **sleep quality** and **physical activity** are generally associated with **longer**
+          predicted sleep, while higher **stress** and **pulse pressure** are associated with **shorter**
+          predicted sleep.
+        - The interactive prediction tool demonstrates that changing these inputs (for example, lowering
+          stress or improving sleep quality) does change the model’s estimated sleep duration in plausible
+          directions.
+        """
+    )
+
+    # --- 2. Limitations / why the model is not fully accurate ---
+    st.subheader("Limitations and what the model is missing")
+
+    st.markdown(
+        """
+        Even though the model fits this dataset reasonably well, it is **not a complete or fully accurate
+        representation of real-world sleep behavior**:
+
+        - **Limited set of predictors**: The model only uses a small subset of factors. In reality, sleep
+          duration is also affected by caffeine intake, alcohol, screen time, shift work, noise/light
+          exposure, mental health, chronic illnesses, medications, and genetics — none of which are
+          captured here.
+        - **Self‑reported and simplified measures**: Variables like *Quality of Sleep* and *Stress Level*
+          are self-reported on 1–10 scales. These are coarse, subjective measurements and do not capture
+          detailed sleep architecture or clinical stress.
+        - **Dataset scope and representativeness**: The dataset reflects a specific sample of individuals
+          and may not generalize to all age groups, cultures, occupations, or health conditions.
+        - **Linear and additive assumptions**: Ridge regression assumes that each factor has a linear,
+          additive effect on sleep duration. Real sleep patterns often involve non‑linear effects and
+          interactions (for example, stress plus late caffeine plus screen time).
+        - **Associational, not causal**: The model finds patterns in this dataset, but it **does not prove
+          that changing a single variable will cause a specific change in sleep**. For example, reducing
+          pulse pressure or stress may be beneficial, but the estimated impact on sleep duration here is
+          only an approximation, not a causal guarantee.
+        """
+    )
+
+    st.info(
+        "In short: the chosen factors do influence the model’s prediction of sleep duration, "
+        "but many important determinants of sleep are not included. The tool is best used for "
+        "exploration and education, not as a precise or clinical sleep predictor."
+    )
+
+    # --- 3. Actionable recommendations (with expanders) ---
+    st.subheader("Actionable recommendations")
+
+    with st.expander("Improve sleep quality and routine"):
+        st.markdown(
+            """
+            - Aim for a **consistent bedtime and wake time** to stabilize your sleep schedule.
+            - Create a **wind‑down routine** (reduced screens, dim lighting, relaxing activity) to push your
+              *Quality of Sleep* score upward in the model inputs.
+            - Use the prediction panel to simulate going to bed slightly earlier and see how the estimated
+              sleep duration responds.
+            """
+        )
+
+    with st.expander("Manage stress and mental load"):
+        st.markdown(
+            """
+            - Because higher **Stress Level** is linked to shorter predicted sleep in this model, build
+              **small, daily stress‑management habits** (short breaks, breathing exercises, light stretching,
+              journaling).
+            - In the input panel, try lowering your stress score by 1–2 points and observe how the predicted
+              sleep duration changes. Treat this as a *what‑if* exploration, not a promise.
+            - If high stress and poor sleep persist, consider talking to a health professional; this app
+              cannot assess or diagnose mental health.
+            """
+        )
+
+    with st.expander("Physical activity and daily movement"):
+        st.markdown(
+            """
+            - Increase **Physical Activity Level** or **Daily Steps** gradually (for example, an extra
+              10–15 minutes of walking or +1,000 steps per day) and test those values in the model.
+            - Note how moderate increases in activity often lead to slightly longer predicted sleep,
+              especially when not scheduled too close to bedtime.
+            - Prioritize changes that you can **sustain long‑term** rather than large, short‑lived spikes.
+            """
+        )
+
+    with st.expander("Cardiovascular health and blood pressure"):
+        st.markdown(
+            """
+            - The model suggests that higher **pulse pressure** and higher blood pressure values are
+              associated with modestly shorter sleep duration, reflecting a link between cardiovascular
+              strain and sleep.
+            - Use the input sliders to see how changes in **Systolic_BP** and **Diastolic_BP** (and therefore
+              Pulse_Pressure) affect your predicted sleep, but rely on **actual medical guidance** for any
+              decisions about blood pressure management.
+            - If you see a pattern of high blood pressure and low predicted sleep, treat it as a prompt to
+              monitor your health more closely and consult a professional.
+            """
+        )
+
+    # --- 4. Interactive insight selector / text box ---
+    st.subheader("Explore insights interactively")
+
+    insight_choice = st.selectbox(
+        "Choose a question to explore:",
+        [
+            "How can I increase my predicted sleep?",
+            "What happens if I reduce my stress?",
+            "What happens if I improve sleep quality?",
+            "What happens if I become more active?",
+            "How sensitive is the model to blood pressure changes?"
+        ]
+    )
+
+    if insight_choice == "How can I increase my predicted sleep?":
+        st.markdown(
+            """
+            - Use the **prediction section** to adjust one factor at a time (sleep quality, stress, activity,
+              steps) and watch how the gauge and histogram move.
+            - Identify which 1–2 changes give the largest increase in predicted sleep for you; focus your
+              real-life efforts there.
+            - Remember that unmodeled factors (caffeine, light, noise, mental health) can easily override
+              these gains in real life.
+            """
+        )
+
+    elif insight_choice == "What happens if I reduce my stress?":
+        st.markdown(
+            """
+            - Keep all other sliders fixed and lower **Stress Level** step by step (for example, from 8 → 6 → 4).
+            - Observe the predicted sleep duration after each change; this illustrates the model’s estimated
+              benefit of stress reduction for someone with your profile.
+            - Use this as a guide to prioritize stress‑reducing habits (breaks, boundaries, relaxation),
+              not as an exact forecast.
+            """
+        )
+
+    elif insight_choice == "What happens if I improve sleep quality?":
+        st.markdown(
+            """
+            - Increase **Quality of Sleep** in the input panel (e.g., from 5 → 7 → 9) and note how strongly
+              predicted sleep responds.
+            - This shows that, in this dataset, improving the *experience* of sleep is often as important as
+              changing external metrics like steps or heart rate.
+            - Experiment in real life with bedroom environment (light, noise, temperature), bedtime routine,
+              and screen use, then adjust the slider to match your perceived quality over time.
+            """
+        )
+
+    elif insight_choice == "What happens if I become more active?":
+        st.markdown(
+            """
+            - Raise **Physical Activity Level** or **Daily Steps** and re-run the prediction to see the
+              model’s response.
+            - Look for a realistic activity target that nudges predicted sleep upward without being extreme.
+            - Keep in mind that very intense late-night exercise can still disrupt sleep even if the model
+              predicts more sleep based on total activity minutes.
+            """
+        )
+
+    elif insight_choice == "How sensitive is the model to blood pressure changes?":
+        st.markdown(
+            """
+            - Adjust **Systolic_BP** and **Diastolic_BP** in the prediction panel and watch how
+              **Pulse_Pressure** (auto-calculated) and predicted sleep change.
+            - Note that the effects are usually modest; the model treats blood pressure as one contributor
+              among many, not the dominant driver of sleep.
+            - Use this only for educational insight into the relationship between cardiovascular metrics and
+              sleep in this dataset — it does **not** replace proper blood pressure monitoring or care.
             """
         )
 
